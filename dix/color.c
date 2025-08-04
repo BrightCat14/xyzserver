@@ -56,7 +56,10 @@ typedef struct _builtinColor {
     unsigned char green;
     unsigned char blue;
     const char *name;
+    int name_len;
 } BuiltinColor;
+
+#define ARRAY_SIZE(arr) (sizeof(arr)/sizeof(arr[0]))
 
 static const BuiltinColor BuiltinColors[] = {
 /*    R    G    B     name                  */
@@ -844,30 +847,31 @@ static const BuiltinColor BuiltinColors[] = {
     { 154, 205,  50, "YellowGreen"            },
 };
 
-Bool
-dixLookupBuiltinColor(int screen,
-                      char *name,
-                      unsigned int len,
-                      unsigned short *pred,
-                      unsigned short *pgreen,
-                      unsigned short *pblue)
+Bool dixLookupBuiltinColor(int screen,
+                           const char *name,
+                           unsigned int len,
+                           unsigned short *pred,
+                           unsigned short *pgreen,
+                           unsigned short *pblue)
 {
     int low = 0;
     int high = ARRAY_SIZE(BuiltinColors) - 1;
 
-    while (high >= low) {
+    while (low <= high) {
         int mid = (low + high) / 2;
         const BuiltinColor *c = &BuiltinColors[mid];
-        const int currentLen = strlen(c->name);
-        const int r = strncasecmp(c->name, name, min(len, currentLen));
+
+        int cmp_len = len < c->name_len ? len : c->name_len;
+        int r = strncasecmp(c->name, name, cmp_len);
 
         if (r == 0) {
-            if (len == currentLen) {
+            if (len == c->name_len) {
+                // Полное совпадение
                 *pred = c->red * 0x101;
                 *pgreen = c->green * 0x101;
                 *pblue = c->blue * 0x101;
                 return TRUE;
-            } else if (len > currentLen) {
+            } else if (len > c->name_len) {
                 low = mid + 1;
             } else {
                 high = mid - 1;
@@ -878,5 +882,6 @@ dixLookupBuiltinColor(int screen,
             low = mid + 1;
         }
     }
+
     return FALSE;
 }
