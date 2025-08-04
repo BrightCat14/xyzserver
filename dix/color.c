@@ -59,8 +59,6 @@ typedef struct _builtinColor {
     int name_len;
 } BuiltinColor;
 
-#define ARRAY_SIZE(arr) (sizeof(arr)/sizeof(arr[0]))
-
 static const BuiltinColor BuiltinColors[] = {
 /*    R    G    B     name                  */
     { 240, 248, 255, "alice blue"             },
@@ -847,8 +845,9 @@ static const BuiltinColor BuiltinColors[] = {
     { 154, 205,  50, "YellowGreen"            },
 };
 
+
 Bool dixLookupBuiltinColor(int screen,
-                           const char *name,
+                           char *name,
                            unsigned int len,
                            unsigned short *pred,
                            unsigned short *pgreen,
@@ -866,7 +865,6 @@ Bool dixLookupBuiltinColor(int screen,
 
         if (r == 0) {
             if (len == c->name_len) {
-                // Полное совпадение
                 *pred = c->red * 0x101;
                 *pgreen = c->green * 0x101;
                 *pblue = c->blue * 0x101;
