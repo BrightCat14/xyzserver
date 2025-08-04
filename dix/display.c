@@ -17,37 +17,35 @@ int displayfd = -1;
 
 const char *dixGetDisplayName(ScreenPtr *pScreen)
 {
-    // Use new entry displayName if it exists
     if (pScreen && (*pScreen)->displayName)
-		return (*pScreen)->displayName;
+        return (*pScreen)->displayName;
 
     return display;
 }
 
-void dixSetDisplayName(ScreenPtr pScreen, const char *name)
+void dixSetDisplayName(ScreenPtr *pScreen, const char *name)
 {
     if (!pScreen)
         return;
 
-    // Safe copy of a str
-    if (pScreen->displayName)
-        free((void *)pScreen->displayName);
+    if ((*pScreen)->displayName)
+        free((void *)(*pScreen)->displayName);
 
-    pScreen->displayName = strdup(name ? name : "0");
+    (*pScreen)->displayName = strdup(name ? name : "0");
 }
 
-
-void dixSetDisplayNameAuto(ScreenPtr pScreen)
+void dixSetDisplayNameAuto(ScreenPtr *pScreen)
 {
     if (!pScreen)
         return;
 
-    if (pScreen->displayName) {
-        free(pScreen->displayName);
-        pScreen->displayName = NULL;
+    if ((*pScreen)->displayName) {
+        free((void *)(*pScreen)->displayName);
+        (*pScreen)->displayName = NULL;
     }
 
     char buf[64];
-    snprintf(buf, sizeof(buf), "Display-%d", pScreen->myNum); // myNum — номер экрана
-    pScreen->displayName = strdup(buf);
+    snprintf(buf, sizeof(buf), "Display-%d", (*pScreen)->myNum);
+    (*pScreen)->displayName = strdup(buf);
 }
+

@@ -234,9 +234,8 @@ extern _X_EXPORT void *lastGLContext;
  * @return pointer to string, valid as long as the pScreen is, owned by DIX.
  */
 _X_EXPORT const char *dixGetDisplayName(ScreenPtr *pScreen);
-
 _X_EXPORT void dixSetDisplayName(ScreenPtr *pScreen, const char *name);
-
 _X_EXPORT void dixSetDisplayNameAuto(ScreenPtr *pScreen);
+
 
 #endif                          /* DIX_H */
