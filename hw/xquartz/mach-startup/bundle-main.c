@@ -92,7 +92,7 @@ static const char *__crashreporter_info__ __attribute__((__used__)) =
 asm (".desc ___crashreporter_info__, 0x10");
 
 static const char *__crashreporter_info__base =
-    "XLibre X Server " XSERVER_VERSION;
+    "XYZ X Server " XSERVER_VERSION;
 
 char *bundle_id_prefix = NULL;
 static char *server_bootstrap_name = NULL;

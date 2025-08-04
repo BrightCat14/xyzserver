@@ -174,7 +174,7 @@ void
 DarwinPrintBanner(void)
 {
     ErrorF("Xquartz starting:\n");
-    ErrorF("XLibre X Server %s\n", XSERVER_VERSION);
+    ErrorF("XYZ X Server %s\n", XSERVER_VERSION);
 }
 
 /*
