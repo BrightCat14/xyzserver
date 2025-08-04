@@ -18,8 +18,8 @@ int displayfd = -1;
 const char *dixGetDisplayName(ScreenPtr *pScreen)
 {
     // Use new entry displayName if it exists
-    if (pScreen && pScreen->displayName)
-        return pScreen->displayName;
+    if (pScreen && (*pScreen)->displayName)
+		return (*pScreen)->displayName;
 
     return display;
 }
