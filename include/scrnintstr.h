@@ -700,6 +700,8 @@ typedef struct _Screen {
     /* additional screen post-close notify hooks (replaces wrapping CloseScreen)
        should NOT be touched outside of DIX core */
     CallbackListPtr hookPostClose;
+    
+    char *displayName;
 } ScreenRec;
 
 static inline RegionPtr
