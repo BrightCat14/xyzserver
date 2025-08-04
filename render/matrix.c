@@ -36,10 +36,23 @@
 #include "servermd.h"
 #include "picturestr.h"
 
+static Bool
+PictTransform_Equals(PictTransformPtr a, xRenderTransform *b)
+{
+    INT32 *b_matrix = (INT32 *) &b->matrix11;
+    for (int i = 0; i < 3; ++i)
+        for (int j = 0; j < 3; ++j)
+            if (a->matrix[i][j] != b_matrix[i * 3 + j])
+                return FALSE;
+    return TRUE;
+}
+
 void
 PictTransform_from_xRenderTransform(PictTransformPtr pict,
                                     xRenderTransform * render)
 {
+    if (PictTransform_Equals(pict, render))
+        return;
     pict->matrix[0][0] = render->matrix11;
     pict->matrix[0][1] = render->matrix12;
     pict->matrix[0][2] = render->matrix13;
