@@ -1,2 +1,7 @@
-### xyzserver (xyzxserver)
-Lorem ipsum
+### xyz-xserver 1.0.0.0
+
+* Merge from upstream (xlibre-xserver) by @BrightCat14 in https://github.com/BrightCat14/xyzserver/pull/1
+* from upstream: Xnamespace: fix wrong const char* authProto by @BrightCat14 in https://github.com/BrightCat14/xyzserver/pull/2
+* Optimize config/fdi2iclass.py for better readability and performance by @BrightCat14 in https://github.com/BrightCat14/xyzserver/pull/3
+* from upstream: Xext: xv: fix redefinition of typedef 'XvPortNotifyPtr' in https://github.com/BrightCat14/xyzserver/pull/4
+* dixfonts.c: Overflow warning fix by @BrightCat14 in https://github.com/BrightCat14/xyzserver/pull/5
