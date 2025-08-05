@@ -6,8 +6,10 @@
 #
 # (C) 2010 Dan Nicholson
 # (C) 2009 Canonical Ltd.
+# (C) 2025 AkaruiNeko.
 # Author: Dan Nicholson <dbn.lists@gmail.com>
 # Author: Martin Pitt <martin.pitt@ubuntu.com>
+# Author: George Kulikov <brightcat1950@gmail.com>
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to
@@ -28,7 +30,6 @@
 
 import sys, xml.dom.minidom
 
-# dict converting <match> tags to Match* entries
 match_table = {
     'info.product': 'MatchProduct',
     'input.product': 'MatchProduct',
@@ -40,7 +41,6 @@ match_table = {
     '@info.parent:pnp.id': 'MatchPnPID',
 }
 
-# dict converting info.capabilities list to Match* entries
 cap_match_table = {
     'input.keys': 'MatchIsKeyboard',
     'input.keyboard': 'MatchIsKeyboard',
@@ -54,9 +54,7 @@ cap_match_table = {
 
 def device_glob(path):
     '''Convert a contains device path to a glob entry'''
-    if path[0] != '/':
-        path = '*' + path
-    return path + '*'
+    return (('*' + path) if not path.startswith('/') else path) + '*'
 
 def parse_match(node):
     '''Parse a <match> tag to a tuple with InputClass values'''
@@ -64,30 +62,29 @@ def parse_match(node):
     value = None
     booltype = False
 
-    # see what type of key we have
-    if node.attributes.has_key('key'):
-        key = node.attributes['key'].nodeValue
+    key = node.attributes.get('key')
+    if key:
+        key = key.nodeValue
         if key in match_table:
             match = match_table[key]
         elif key == 'info.capabilities':
             booltype = True
 
-    # bail out now if it's unrecognized
     if not match and not booltype:
         return (match, value)
 
-    if node.attributes.has_key('string'):
+    if node.attributes.get('string'):
         value = node.attributes['string'].nodeValue
-    elif node.attributes.has_key('contains'):
+    elif node.attributes.get('contains'):
         value = node.attributes['contains'].nodeValue
         if match == 'MatchDevicePath':
             value = device_glob(value)
         elif booltype and value in cap_match_table:
             match = cap_match_table[value]
             value = 'yes'
-    elif node.attributes.has_key('string_outof'):
-        value = node.attributes['string_outof'].nodeValue.replace(';','|')
-    elif node.attributes.has_key('contains_outof'):
+    elif node.attributes.get('string_outof'):
+        value = node.attributes['string_outof'].nodeValue.replace(';', '|')
+    elif node.attributes.get('contains_outof'):
         all_values = node.attributes['contains_outof'].nodeValue.split(';')
         for v in all_values:
             if match == 'MatchDevicePath':
@@ -106,14 +103,14 @@ def parse_options(node):
     driver = ''
     ignore = False
     options = []
-    for n in node.childNodes:
-        if n.nodeType != xml.dom.minidom.Node.ELEMENT_NODE:
-            continue
 
+    for n in (c for c in node.childNodes if c.nodeType == xml.dom.minidom.Node.ELEMENT_NODE):
         tag = n.tagName
-        key = n.attributes['key'].nodeValue
+        key = n.attributes.get('key')
+        if not key:
+            continue
+        key = key.nodeValue
         value = ''
-
         if n.hasChildNodes():
             content_node = n.childNodes[0]
             assert content_node.nodeType == xml.dom.Node.TEXT_NODE
@@ -135,33 +132,26 @@ def parse_options(node):
 
 def is_match_node(node):
     '''Check if a node is a <match> element'''
-    return node.nodeType == xml.dom.minidom.Node.ELEMENT_NODE and \
-        node.tagName == 'match'
+    return node.nodeType == xml.dom.minidom.Node.ELEMENT_NODE and node.tagName == 'match'
 
 def parse_all_matches(node):
-    '''Parse a x11 match tag and any parents that don't supply their
-    own options'''
+    '''Parse a x11 match tag and any parents that don't supply their own options'''
     matches = []
-
     while True:
-        (key, value) = parse_match(node)
+        key, value = parse_match(node)
         if key and value:
             matches.append((key, value))
 
-        # walk up to a parent match node
         node = node.parentNode
         if node is None or not is_match_node(node):
             break
 
-        # leave if there other options at this level
-        children = set([n.tagName for n in node.childNodes
-                        if n.nodeType == xml.dom.minidom.Node.ELEMENT_NODE])
+        children = set(n.tagName for n in node.childNodes if n.nodeType == xml.dom.minidom.Node.ELEMENT_NODE)
         if children & set(['addset', 'merge', 'append']):
             break
 
     return matches
 
-# stupid counter to give "unique" rule names
 num_sections = 1
 def print_section(matches, driver, ignore, options):
     '''Print a valid InputClass section to stdout'''
@@ -181,17 +171,15 @@ def print_section(matches, driver, ignore, options):
 
 def parse_fdi(fdi):
     '''Parse x11 matches from fdi'''
-    # find all <match> leaf nodes
     num = 0
     for match_node in fdi.getElementsByTagName('match'):
-        # see if there are any options at this level
-        (driver, ignore, options) = parse_options(match_node)
+        driver, ignore, options = parse_options(match_node)
         if not driver and not ignore and not options:
             continue
 
-        matches = parse_all_matches(match_node)
         if num > 0:
             print
+        matches = parse_all_matches(match_node)
         print_section(matches, driver, ignore, options)
         num += 1
 
