@@ -7,6 +7,7 @@ xyzserver is a fork of the XLibre Xserver project, aiming to provide a lightweig
 - Optimized color lookup with cached string lengths
 - Custom display naming management
 - Various performance improvements and bug fixes
+- and etc.
 
 ## Requirements
 
