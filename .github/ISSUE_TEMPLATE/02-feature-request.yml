@@ -6,7 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Please fill out the sections below to properly describe the new software feature you are suggesting. If you have a general idea or question then please use the [discussions](https://github.com/orgs/X11Libre/discussions).
+        Please fill out the sections below to properly describe the new software feature you are suggesting.
   - type: textarea
     id: description
     attributes:
@@ -38,9 +38,9 @@ body:
     attributes:
       label: Extra fields
       options:
-        - label: I have checked the existing [issues](https://github.com/X11Libre/xserver/issues)
+        - label: I have checked the existing [issues](https://github.com/BrightCat14/xyzserver/issues)
           required: true
-        - label: I have read the [Contributing Guidelines](https://github.com/X11Libre/xserver/blob/master/CONTRIBUTING.md)
+        - label: I have read the [Contributing Guidelines](https://github.com/BrightCat14/xyzserver/blob/master/CONTRIBUTING.md)
           required: true
         - label: I'd like to work on this issue
   - type: markdown
