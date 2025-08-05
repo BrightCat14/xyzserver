@@ -104,7 +104,6 @@ def parse_options(node):
     ignore = False
     options = []
 
-    # фильтруем сразу только ELEMENT_NODE
     for n in (c for c in node.childNodes if c.nodeType == xml.dom.minidom.Node.ELEMENT_NODE):
         tag = n.tagName
         key = n.attributes.get('key')
