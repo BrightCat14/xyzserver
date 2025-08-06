@@ -211,8 +211,6 @@ dix_main(int argc, char *argv[], char *envp[])
 
         for (int i = 0; i < screenInfo.numScreens; i++) {
             ScreenPtr pScreen = screenInfo.screens[i];
-	    if (!pScreen->displayName)
-		dixSetDisplayNameAuto(&pScreen); // some compilers is shit
             if (!PixmapScreenInit(pScreen))
                 FatalError("failed to create screen pixmap properties");
             if (!dixScreenRaiseCreateResources(pScreen))
