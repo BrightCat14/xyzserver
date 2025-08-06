@@ -1,3 +1,8 @@
+### xyz-xserver 1.0.0.5
+
+* xfree86/modes: Update Default Mode Selection in xf86Crtc to fix issue #122(from upstream pr) by @BrightCat14 in https://github.com/BrightCat14/xyzserver/pull/6
+**Full Changelog**: https://github.com/BrightCat14/xyzserver/compare/xyz-xserver-1.0.0.0...xyz-xserver-1.0.0.5
+
 ### xyz-xserver 1.0.0.0
 
 * Merge from upstream (xlibre-xserver) by @BrightCat14 in https://github.com/BrightCat14/xyzserver/pull/1
