@@ -260,9 +260,9 @@ compAddAlternateVisual(ScreenPtr pScreen, CompScreenPtr cs,
 
     /* Initialize the visual */
     visual->bitsPerRGBValue = 8;
-    if (PICT_FORMAT_TYPE(alt->format) == PICT_TYPE_COLOR) {
+    if (PIXMAN_FORMAT_TYPE(alt->format) == PIXMAN_TYPE_COLOR) {
         visual->class = PseudoColor;
-        visual->nplanes = PICT_FORMAT_BPP(alt->format);
+        visual->nplanes = PIXMAN_FORMAT_BPP(alt->format);
         visual->ColormapEntries = 1 << visual->nplanes;
     }
     else {

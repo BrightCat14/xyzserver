@@ -175,7 +175,7 @@ PictureCreateDefaultFormats(ScreenPtr pScreen, int *nformatp)
     formats[nformats].depth = 1;
     nformats++;
     formats[nformats].format = PICT_FORMAT(BitsPerPixel(8),
-                                           PICT_TYPE_A, 8, 0, 0, 0);
+                                           PIXMAN_TYPE_A, 8, 0, 0, 0);
     formats[nformats].depth = 8;
     nformats++;
     formats[nformats].format = PICT_a8r8g8b8;
@@ -204,38 +204,38 @@ PictureCreateDefaultFormats(ScreenPtr pScreen, int *nformatp)
             r = Ones(pVisual->redMask);
             g = Ones(pVisual->greenMask);
             b = Ones(pVisual->blueMask);
-            type = PICT_TYPE_OTHER;
+            type = PIXMAN_TYPE_OTHER;
             /*
              * Current rendering code supports only three direct formats,
              * fields must be packed together at the bottom of the pixel
              */
             if (pVisual->offsetBlue == 0 &&
                 pVisual->offsetGreen == b && pVisual->offsetRed == b + g) {
-                type = PICT_TYPE_ARGB;
+                type = PIXMAN_TYPE_ARGB;
             }
             else if (pVisual->offsetRed == 0 &&
                      pVisual->offsetGreen == r &&
                      pVisual->offsetBlue == r + g) {
-                type = PICT_TYPE_ABGR;
+                type = PIXMAN_TYPE_ABGR;
             }
             else if (pVisual->offsetRed == pVisual->offsetGreen - r &&
                      pVisual->offsetGreen == pVisual->offsetBlue - g &&
                      pVisual->offsetBlue == bpp - b) {
-                type = PICT_TYPE_BGRA;
+                type = PIXMAN_TYPE_BGRA;
             }
-            if (type != PICT_TYPE_OTHER) {
+            if (type != PIXMAN_TYPE_OTHER) {
                 format = PICT_FORMAT(bpp, type, 0, r, g, b);
                 addFormat(formats, &nformats, format, depth);
             }
             break;
         case StaticColor:
         case PseudoColor:
-            format = PICT_VISFORMAT(bpp, PICT_TYPE_COLOR, v);
+            format = PICT_VISFORMAT(bpp, PIXMAN_TYPE_COLOR, v);
             addFormat(formats, &nformats, format, depth);
             break;
         case StaticGray:
         case GrayScale:
-            format = PICT_VISFORMAT(bpp, PICT_TYPE_GRAY, v);
+            format = PICT_VISFORMAT(bpp, PIXMAN_TYPE_GRAY, v);
             addFormat(formats, &nformats, format, depth);
             break;
         }
@@ -292,94 +292,94 @@ PictureCreateDefaultFormats(ScreenPtr pScreen, int *nformatp)
         pFormats[f].depth = formats[f].depth;
         format = formats[f].format;
         pFormats[f].format = format;
-        switch (PICT_FORMAT_TYPE(format)) {
-        case PICT_TYPE_ARGB:
+        switch (PIXMAN_FORMAT_TYPE(format)) {
+        case PIXMAN_TYPE_ARGB:
             pFormats[f].type = PictTypeDirect;
 
-            pFormats[f].direct.alphaMask = Mask (PICT_FORMAT_A(format));
+            pFormats[f].direct.alphaMask = Mask (PIXMAN_FORMAT_A(format));
 
             if (pFormats[f].direct.alphaMask)
-                pFormats[f].direct.alpha = (PICT_FORMAT_R(format) +
-                                            PICT_FORMAT_G(format) +
-                                            PICT_FORMAT_B(format));
+                pFormats[f].direct.alpha = (PIXMAN_FORMAT_R(format) +
+                                            PIXMAN_FORMAT_G(format) +
+                                            PIXMAN_FORMAT_B(format));
 
-            pFormats[f].direct.redMask = Mask (PICT_FORMAT_R(format));
+            pFormats[f].direct.redMask = Mask (PIXMAN_FORMAT_R(format));
 
-            pFormats[f].direct.red = (PICT_FORMAT_G(format) +
-                                      PICT_FORMAT_B(format));
+            pFormats[f].direct.red = (PIXMAN_FORMAT_G(format) +
+                                      PIXMAN_FORMAT_B(format));
 
-            pFormats[f].direct.greenMask = Mask (PICT_FORMAT_G(format));
+            pFormats[f].direct.greenMask = Mask (PIXMAN_FORMAT_G(format));
 
-            pFormats[f].direct.green = PICT_FORMAT_B(format);
+            pFormats[f].direct.green = PIXMAN_FORMAT_B(format);
 
-            pFormats[f].direct.blueMask = Mask (PICT_FORMAT_B(format));
+            pFormats[f].direct.blueMask = Mask (PIXMAN_FORMAT_B(format));
 
             pFormats[f].direct.blue = 0;
             break;
 
-        case PICT_TYPE_ABGR:
+        case PIXMAN_TYPE_ABGR:
             pFormats[f].type = PictTypeDirect;
 
-            pFormats[f].direct.alphaMask = Mask (PICT_FORMAT_A(format));
+            pFormats[f].direct.alphaMask = Mask (PIXMAN_FORMAT_A(format));
 
             if (pFormats[f].direct.alphaMask)
-                pFormats[f].direct.alpha = (PICT_FORMAT_B(format) +
-                                            PICT_FORMAT_G(format) +
-                                            PICT_FORMAT_R(format));
+                pFormats[f].direct.alpha = (PIXMAN_FORMAT_B(format) +
+                                            PIXMAN_FORMAT_G(format) +
+                                            PIXMAN_FORMAT_R(format));
 
-            pFormats[f].direct.blueMask = Mask (PICT_FORMAT_B(format));
+            pFormats[f].direct.blueMask = Mask (PIXMAN_FORMAT_B(format));
 
-            pFormats[f].direct.blue = (PICT_FORMAT_G(format) +
-                                       PICT_FORMAT_R(format));
+            pFormats[f].direct.blue = (PIXMAN_FORMAT_G(format) +
+                                       PIXMAN_FORMAT_R(format));
 
-            pFormats[f].direct.greenMask = Mask (PICT_FORMAT_G(format));
+            pFormats[f].direct.greenMask = Mask (PIXMAN_FORMAT_G(format));
 
-            pFormats[f].direct.green = PICT_FORMAT_R(format);
+            pFormats[f].direct.green = PIXMAN_FORMAT_R(format);
 
-            pFormats[f].direct.redMask = Mask (PICT_FORMAT_R(format));
+            pFormats[f].direct.redMask = Mask (PIXMAN_FORMAT_R(format));
 
             pFormats[f].direct.red = 0;
             break;
 
-        case PICT_TYPE_BGRA:
+        case PIXMAN_TYPE_BGRA:
             pFormats[f].type = PictTypeDirect;
 
-            pFormats[f].direct.blueMask = Mask (PICT_FORMAT_B(format));
+            pFormats[f].direct.blueMask = Mask (PIXMAN_FORMAT_B(format));
 
             pFormats[f].direct.blue =
-                (PICT_FORMAT_BPP(format) - PICT_FORMAT_B(format));
+                (PIXMAN_FORMAT_BPP(format) - PIXMAN_FORMAT_B(format));
 
-            pFormats[f].direct.greenMask = Mask (PICT_FORMAT_G(format));
+            pFormats[f].direct.greenMask = Mask (PIXMAN_FORMAT_G(format));
 
             pFormats[f].direct.green =
-                (PICT_FORMAT_BPP(format) - PICT_FORMAT_B(format) -
-                 PICT_FORMAT_G(format));
+                (PIXMAN_FORMAT_BPP(format) - PIXMAN_FORMAT_B(format) -
+                 PIXMAN_FORMAT_G(format));
 
-            pFormats[f].direct.redMask = Mask (PICT_FORMAT_R(format));
+            pFormats[f].direct.redMask = Mask (PIXMAN_FORMAT_R(format));
 
             pFormats[f].direct.red =
-                (PICT_FORMAT_BPP(format) - PICT_FORMAT_B(format) -
-                 PICT_FORMAT_G(format) - PICT_FORMAT_R(format));
+                (PIXMAN_FORMAT_BPP(format) - PIXMAN_FORMAT_B(format) -
+                 PIXMAN_FORMAT_G(format) - PIXMAN_FORMAT_R(format));
 
-            pFormats[f].direct.alphaMask = Mask (PICT_FORMAT_A(format));
+            pFormats[f].direct.alphaMask = Mask (PIXMAN_FORMAT_A(format));
 
             pFormats[f].direct.alpha = 0;
             break;
 
-        case PICT_TYPE_A:
+        case PIXMAN_TYPE_A:
             pFormats[f].type = PictTypeDirect;
 
             pFormats[f].direct.alpha = 0;
-            pFormats[f].direct.alphaMask = Mask (PICT_FORMAT_A(format));
+            pFormats[f].direct.alphaMask = Mask (PIXMAN_FORMAT_A(format));
 
             /* remaining fields already set to zero */
             break;
 
-        case PICT_TYPE_COLOR:
-        case PICT_TYPE_GRAY:
+        case PIXMAN_TYPE_COLOR:
+        case PIXMAN_TYPE_GRAY:
             pFormats[f].type = PictTypeIndexed;
             pFormats[f].index.vid =
-                pScreen->visuals[PICT_FORMAT_VIS(format)].vid;
+                pScreen->visuals[PIXMAN_FORMAT_VIS(format)].vid;
             break;
         }
     }
@@ -639,21 +639,21 @@ PictureInit(ScreenPtr pScreen, PictFormatPtr formats, int nformats)
             VisualPtr pVisual =
                 PictureFindVisual(pScreen, formats[n].index.vid);
             if ((pVisual->class | DynamicClass) == PseudoColor)
-                type = PICT_TYPE_COLOR;
+                type = PIXMAN_TYPE_COLOR;
             else
-                type = PICT_TYPE_GRAY;
+                type = PIXMAN_TYPE_GRAY;
             a = r = g = b = 0;
         }
         else {
             if ((formats[n].direct.redMask |
                  formats[n].direct.blueMask | formats[n].direct.greenMask) == 0)
-                type = PICT_TYPE_A;
+                type = PIXMAN_TYPE_A;
             else if (formats[n].direct.red > formats[n].direct.blue)
-                type = PICT_TYPE_ARGB;
+                type = PIXMAN_TYPE_ARGB;
             else if (formats[n].direct.red == 0)
-                type = PICT_TYPE_ABGR;
+                type = PIXMAN_TYPE_ABGR;
             else
-                type = PICT_TYPE_BGRA;
+                type = PIXMAN_TYPE_BGRA;
             a = Ones(formats[n].direct.alphaMask);
             r = Ones(formats[n].direct.redMask);
             g = Ones(formats[n].direct.greenMask);
@@ -1430,16 +1430,16 @@ ReduceCompositeOp(CARD8 op, PicturePtr pSrc, PicturePtr pMask, PicturePtr pDst,
      * simplest case where there is no transform on the source
      * picture.
      */
-    no_src_alpha = PICT_FORMAT_COLOR(pSrc->format) &&
-        PICT_FORMAT_A(pSrc->format) == 0 &&
+    no_src_alpha = PIXMAN_FORMAT_COLOR(pSrc->format) &&
+        PIXMAN_FORMAT_A(pSrc->format) == 0 &&
         (pSrc->repeatType != RepeatNone ||
          (!pSrc->transform &&
           xSrc >= 0 && ySrc >= 0 &&
           xSrc + width <= pSrc->pDrawable->width &&
           ySrc + height <= pSrc->pDrawable->height)) &&
         pSrc->alphaMap == NULL && pMask == NULL;
-    no_dst_alpha = PICT_FORMAT_COLOR(pDst->format) &&
-        PICT_FORMAT_A(pDst->format) == 0 && pDst->alphaMap == NULL;
+    no_dst_alpha = PIXMAN_FORMAT_COLOR(pDst->format) &&
+        PIXMAN_FORMAT_A(pDst->format) == 0 && pDst->alphaMap == NULL;
 
     /* TODO, maybe: Conjoint and Disjoint op reductions? */
 
